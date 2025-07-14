@@ -5,7 +5,7 @@ NAMESPACE=local-api
 .PHONY: build apply destroy api-up api-down
 
 build:
-	cd api && docker build -t $(IMAGE_NAME):latest .
+	docker build -t $(IMAGE_NAME):latest -f api/app/Dockerfile api/app
 
 api-up:
 	kubectl create namespace $(NAMESPACE) || true
