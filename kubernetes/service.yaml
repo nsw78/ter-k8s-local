@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-api
+  namespace: local-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client-api
+  template:
+    metadata:
+      labels:
+        app: client-api
+    spec:
+      containers:
+        - name: client-api
+          image: client-api:latest
+          ports:
+            - containerPort: 8000
