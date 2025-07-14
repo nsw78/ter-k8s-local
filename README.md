@@ -6,7 +6,7 @@
 
 > *Porque todo projeto épico merece um centro de comando visual.*
 
-![Cyberpunk Bunker](IMAGEM_DO_BUNKER_AQUI)
+![Cyberpunk Bunker](https://github.com/nsw78/ter-k8s-local/blob/main/img/cyberpunk-t.png)
 
 ---
 
