@@ -1,53 +1,61 @@
 #############################################
-# Variáveis Globais
+# 📦 Variáveis Globais
 #############################################
 
-# Nome completo da imagem Docker (incluindo namespace Docker Hub)
+# Nome completo da imagem Docker (Docker Hub namespace incluso)
 IMAGE_NAME=nswit/client-api
 
-# Namespace do Kubernetes para isolar a aplicação
+# Namespace Kubernetes da aplicação
 NAMESPACE=local-api
 
 #############################################
-# Alvos principais para Build, Push e Deploy
+# 🚀 Comandos Principais: Build, Push, Deploy
 #############################################
 
-# Constrói a imagem Docker localmente
+# 🔨 Constrói a imagem Docker localmente
 build:
+	@echo "🔨 Buildando imagem Docker: $(IMAGE_NAME):latest"
 	cd api/app && docker build -t $(IMAGE_NAME):latest .
 
-# Realiza o push da imagem para o Docker Hub
+# 🚀 Faz o push da imagem para o Docker Hub
 push:
+	@echo "🚀 Enviando imagem para o Docker Hub..."
 	docker push $(IMAGE_NAME):latest
 
-# Cria namespace (caso não exista) e aplica os manifests no Kubernetes
+# 📦 Cria namespace (se não existir) e aplica os manifests Kubernetes
 api-up:
-	- kubectl create namespace $(NAMESPACE) || echo "Namespace já existe"
+	@echo "📦 Criando namespace (se necessário)..."
+	- kubectl get namespace $(NAMESPACE) >/dev/null 2>&1 || kubectl create namespace $(NAMESPACE)
+	@echo "🚀 Aplicando manifests Kubernetes..."
 	kubectl apply -f kubernetes/ -n $(NAMESPACE)
 
-# Remove os manifests aplicados no Kubernetes
+# 🧹 Remove os recursos do Kubernetes (ignora erros se já removidos)
 api-down:
-	- kubectl delete -f kubernetes/ -n $(NAMESPACE) || echo "Manifestos já removidos ou não existem"
+	@echo "🧹 Removendo recursos Kubernetes..."
+	- kubectl delete -f kubernetes/ -n $(NAMESPACE) || echo "📝 Recursos já removidos ou inexistentes."
 
-# Aplica a infraestrutura via Terraform
+# 🌍 Aplica infraestrutura usando Terraform
 apply:
+	@echo "🌍 Aplicando infraestrutura com Terraform..."
 	cd terraform && terraform init && terraform apply -auto-approve
 
-# Destroi a infraestrutura via Terraform
+# 🔥 Destroi infraestrutura via Terraform
 destroy:
+	@echo "🔥 Destruindo infraestrutura via Terraform..."
 	cd terraform && terraform destroy -auto-approve
 
-# Executa pipeline completa: builda, faz push da imagem e aplica no Kubernetes
+# 🎁 Pipeline completa: Build + Push + Deploy
 all: build push api-up
+	@echo "✅ Pipeline concluída com sucesso!"
 
 #############################################
-# 📚 Instruções rápidas:
+# 📝 Resumo Rápido:
 #
-# make build     → builda a imagem local
-# make push      → envia a imagem para Docker Hub
-# make api-up    → cria namespace (se necessário) e aplica manifests
-# make api-down  → remove deployment e serviço no Kubernetes
-# make apply     → cria infraestrutura via Terraform
-# make destroy   → destrói a infraestrutura via Terraform
-# make all       → builda imagem, faz push e aplica no Kubernetes
+# make build     → Builda imagem local
+# make push      → Faz push da imagem para Docker Hub
+# make api-up    → Cria namespace e aplica manifestos Kubernetes
+# make api-down  → Remove deployment/serviço no Kubernetes
+# make apply     → Aplica infraestrutura via Terraform
+# make destroy   → Destroi infraestrutura via Terraform
+# make all       → Executa build + push + deploy
 #############################################
