@@ -11,11 +11,15 @@ class Client(BaseModel):
     name: str
     email: str
 
-@app.post("/clients/")
-def create_client(client: Client):
+@app.get("/")
+async def root():
+    return {"message": "API funcionando!"}
+
+@app.post("/clients/", response_model=Client)
+async def create_client(client: Client):
     clients.append(client)
     return client
 
 @app.get("/clients/", response_model=List[Client])
-def get_clients():
+async def get_clients():
     return clients
