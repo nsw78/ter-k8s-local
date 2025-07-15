@@ -126,6 +126,15 @@ kubectl rollout restart deployment/client-api -n local-api
 ```bash
 cd api/app
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+# API: python + css + swagger
+# - FastAPI para backend
+# ✅ Resultado:
+# Cadastro de clientes via formulário
+# http://localhost:8000/ ➡️ formulário com layout
+# http://localhost:8000/clients ➡️ lista bonita com CSS
+# http://localhost:8000/docs ➡️ Swagger API normal
+
 ```
 
 > Só pra lembrar: você está fora do cluster, então sem Prometheus olhando 👀
