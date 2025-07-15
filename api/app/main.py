@@ -1,15 +1,20 @@
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, Form, Request, status
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, EmailStr
 from typing import List
 
 app = FastAPI()
 
+# Configura o diretório de templates e estáticos
+templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Modelos
 class ClientBase(BaseModel):
     name: str
     email: EmailStr
-
-class ClientCreate(ClientBase):
-    pass
 
 class Client(ClientBase):
     id: int
@@ -17,65 +22,28 @@ class Client(ClientBase):
 clients: List[Client] = []
 next_id = 1
 
-@app.get("/", tags=["Health"])
-async def root():
-    return {"message": "API funcionando!"}
+@app.get("/", response_class=HTMLResponse)
+async def form_page(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
-@app.post(
-    "/clients/",
-    response_model=Client,
-    status_code=status.HTTP_201_CREATED,
-    tags=["Clients"],
-    summary="Cria um novo cliente"
-)
-async def create_client(client: ClientCreate):
+@app.post("/create-client", response_class=HTMLResponse)
+async def create_client(
+    request: Request,
+    name: str = Form(...),
+    email: str = Form(...)
+):
     global next_id
-    # Verifica se o e-mail já existe
-    if any(c.email == client.email for c in clients):
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="E-mail já cadastrado"
-        )
-    new_client = Client(id=next_id, **client.dict())
+    # Simples verificação de email duplicado
+    if any(c.email == email for c in clients):
+        return templates.TemplateResponse("index.html", {
+            "request": request,
+            "error": "E-mail já cadastrado!"
+        })
+    new_client = Client(id=next_id, name=name, email=email)
     clients.append(new_client)
     next_id += 1
-    return new_client
+    return RedirectResponse(url="/clients", status_code=status.HTTP_303_SEE_OTHER)
 
-@app.get(
-    "/clients/",
-    response_model=List[Client],
-    tags=["Clients"],
-    summary="Lista todos os clientes"
-)
-async def get_clients():
-    return clients
-
-@app.get(
-    "/clients/{client_id}",
-    response_model=Client,
-    tags=["Clients"],
-    summary="Busca um cliente pelo ID"
-)
-async def get_client(client_id: int):
-    for client in clients:
-        if client.id == client_id:
-            return client
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail="Cliente não encontrado"
-)
-
-from fastapi import Response
-from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
-
-@app.get("/metrics", tags=["Monitoring"])
-async def metrics():
-    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
-
-@app.get("/health", tags=["Monitoring"])
-async def health_check():
-    return {"status": "ok"}
-
-@app.get("/ready", tags=["Monitoring"])
-async def readiness_check():
-    return {"status": "ready"}
+@app.get("/clients", response_class=HTMLResponse)
+async def list_clients(request: Request):
+    return templates.TemplateResponse("clients.html", {"request": request, "clients": clients})

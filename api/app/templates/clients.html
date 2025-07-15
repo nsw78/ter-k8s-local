@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Clientes</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Clientes Cadastrados</h1>
+    <ul>
+        {% for client in clients %}
+            <li>{{ client.id }} - {{ client.name }} ({{ client.email }})</li>
+        {% endfor %}
+    </ul>
+    <a href="/">Cadastrar Novo</a>
+</body>
+</html>

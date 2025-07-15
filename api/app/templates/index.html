@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cadastro de Clientes</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Cadastro de Cliente</h1>
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+    <form method="post" action="/create-client">
+        <input type="text" name="name" placeholder="Nome completo" required>
+        <input type="email" name="email" placeholder="E-mail" required>
+        <button type="submit">Cadastrar</button>
+    </form>
+    <a href="/clients">Ver lista de clientes</a>
+</body>
+</html>

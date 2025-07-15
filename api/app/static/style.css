@@ -1,0 +1,44 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 30px;
+    background-color: #f7f7f7;
+    color: #333;
+}
+
+h1 {
+    color: #007bff;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    gap: 10px;
+}
+
+input, button {
+    padding: 10px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+a {
+    margin-top: 20px;
+    display: inline-block;
+    color: #007bff;
+}
+
+.error {
+    color: red;
+    margin-bottom: 10px;
+}
