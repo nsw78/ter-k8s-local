@@ -138,4 +138,6 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 ---
+> ℹ️ O arquivo `.terraform.lock.hcl` é versionado propositalmente para garantir consistência nos providers. 
+Não remova do Git nem adicione ao `.gitignore`.
 
