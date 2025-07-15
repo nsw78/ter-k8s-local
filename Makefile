@@ -146,14 +146,6 @@ check-deps:
 # make reset → Remove tudo e limpa projeto
 #############################################
 
-# API: python + css + swagger
-# - FastAPI para backend
-# ✅ Resultado:
-# Cadastro de clientes via formulário
-# http://localhost:8000/ ➡️ formulário com layout
-# http://localhost:8000/clients ➡️ lista bonita com CSS
-# http://localhost:8000/docs ➡️ Swagger API normal
-
-
+---
 
 .PHONY: build push api-up api-down logs-api monitoring-up monitoring-down monitoring-restart apply plan destroy all reset
