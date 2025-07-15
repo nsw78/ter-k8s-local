@@ -45,7 +45,7 @@ logs-api:
 monitoring-up:
 	@echo "📊 Criando namespace do Monitoring se necessário..."
 	- kubectl get namespace $(NAMESPACE_MONITORING) >/dev/null 2>&1 || kubectl create namespace $(NAMESPACE_MONITORING)
-	@echo "🧠 Aplicando ConfigMap Prometheus (prometheus.yml)..."
+	@echo "🧠 Aplicando ConfigMap Prometheus (prometheus-config.yaml)..."
 	kubectl apply -f kubernetes/monitoring/prometheus-config.yaml -n $(NAMESPACE_MONITORING)
 	@echo "🧠 Aplicando ConfigMap Grafana (datasource)..."
 	kubectl apply -f kubernetes/monitoring/grafana-datasource.yaml -n $(NAMESPACE_MONITORING)

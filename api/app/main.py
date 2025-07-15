@@ -64,3 +64,18 @@ async def get_client(client_id: int):
         status_code=status.HTTP_404_NOT_FOUND,
         detail="Cliente não encontrado"
 )
+
+from fastapi import Response
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
+
+@app.get("/metrics", tags=["Monitoring"])
+async def metrics():
+    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
+@app.get("/health", tags=["Monitoring"])
+async def health_check():
+    return {"status": "ok"}
+
+@app.get("/ready", tags=["Monitoring"])
+async def readiness_check():
+    return {"status": "ready"}
